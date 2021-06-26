@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const linkSchema =new Schema({
     userId: {
-        type: String,
+        type: Number,
         required: true,
     },
     route: {
@@ -11,6 +11,10 @@ const linkSchema =new Schema({
     },
     redirect: {
         type: String,
+        required: true,
+    },
+    nbrClicks: {
+        type: Number,
         required: true,
     },
 },{timestamps : true});

@@ -5,6 +5,11 @@ const clickSchema =new Schema({
         type: Number,
         required: true,
     },
+    linkId:
+    {
+        type:String,
+        required:true
+    },
     link: {
         type: String,
         required: true,

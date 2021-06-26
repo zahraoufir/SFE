@@ -13,6 +13,8 @@ router.post('/login', userController.login);
 router.post('/forgot', userController.forgotpassword);
 router.post('/reset/:token', userController.resetpassword);
 router.post('/verefication-profile', userController.activateNewEmail);
+router.post('/getId', userController.getID);
+router.post('/get-paypal', userController.getPaypal);
 //router.post('/get-paypal', userController.getPaypal);
 module.exports = router;
  

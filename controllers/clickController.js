@@ -18,13 +18,22 @@ const create = (req, res, next) => {
     Link.find({userId: iduser,route: tagname}).exec((err, result) =>{
         if (err) throw err;
         if(result){
+       
            const newClick = new Click({
             userId: iduser,
-            link: 'https://affiliate.storeino.com/'+iduser+'/'+tagname,
-            date: Date.now()
+            link: 'http://localhost:4000/api/clicks/create/'+iduser+'/'+tagname,
+            date: Date.now(),
+            linkId :" "+result[0]._id
             });
+            
             newClick.save()
             .then(newClick => {
+                const nbr=result[0].nbrClicks+1;
+                Link.updateOne({_id:result[0]._id},{$set: { nbrClicks: nbr }}, (err)=>{
+                    if (err) throw err;
+                    console.log("1 document updated");
+                });
+                console.log("heloooowoiefjwejkfn"+result[0].redirect);
            res.redirect(result[0].redirect)
             })
             .catch(error => {
@@ -33,6 +42,7 @@ const create = (req, res, next) => {
                     message: error
                 });
             });
+            
         }else{
             res.json({
                 message:"no result"
@@ -44,7 +54,7 @@ const create = (req, res, next) => {
     
 const getAll = (req, res, next)=>{
     
-    const id = 5
+    const id = req.user
       Click.find({userId:id}).exec((err, result) =>{
         if (err) throw err;
         if(result){
@@ -63,7 +73,7 @@ const getAll = (req, res, next)=>{
 
 const chartData = (req, res, next) => {
 
-    const id = parseInt(req.body.id)
+    const id = parseInt(req.user)
      Click.aggregate([
         {
             $group: {
@@ -95,15 +105,18 @@ const chartData = (req, res, next) => {
 
             })
         }
-       
-        return res.json({
+       else{
+           console.log("total"+total);
+         return res.json({
             message: total,
-        });
+        });  
+       }
+        
     })
 }
 
 const countClick = (req, res, next) => {
-    const id = parseInt(req.user)
+    const id = req.user;
     Click.count({ userId: id }, (err, count) => {
        
         if (err) {
@@ -112,11 +125,27 @@ const countClick = (req, res, next) => {
             })
         }
        
+       console.log(count)
+        return res.json({
+            message: count
+        });
+    })
+}
+const countClickperLink = (req, res, next) => {
+    const idlink = req.body.idlink
+    Click.count({ linkid: idlink }, (err, count) => {
+        if (err) {
+            return res.json({
+                message: err
+            })
+        }
+        
+       
         return res.json({
             message: count
         });
     })
 }
 module.exports = {
-    countClick, create, chartData, getAll, urlformat
+    countClick, create, chartData, getAll, urlformat,countClickperLink
 }

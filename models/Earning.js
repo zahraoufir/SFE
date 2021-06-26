@@ -8,7 +8,7 @@ const earningSchema =new Schema({
     },
     linkId:
     {
-        type:Number,
+        type:String,
         required:true
     },
     originalPrice:

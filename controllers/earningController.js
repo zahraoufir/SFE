@@ -7,7 +7,7 @@ const create = (req, res, next) => {
     const calculateprice =  pourcentage*originalprice;
     const linkId = req.body.linkId;
     const newEarning = new Earning({
-        userId: 'link.userId',
+        userId: req.body.userId,
         linkId: linkId,
         originalPrice: originalprice,
         pourcentage: pourcentage,
@@ -35,12 +35,12 @@ const create = (req, res, next) => {
 const getAll = (req, res, next)=>{
     const token ='';
     const userId=req.user
-      Earning.find().exec((err, result) =>{
+      Earning.find({userId:userId}).exec((err, result) =>{
         if (err) throw err;
         if(result){
         res.json({
            massage:"succesful",
-            result
+           result
         });
         }else{
             res.json({
@@ -67,7 +67,7 @@ const pendingEarning = (req, res, next) => {
     Earning.aggregate([
         {
             "$group": {
-                "_id": { userId: "$userId", isPaidOut: "$isPaidOut" },
+                "_id": { userId: "$userId", isPaidOut: "$isPaidOut" ,isCenceled: "$isCenceled" },
                 "total": { "$sum": "$price" }
             }
         }
@@ -77,7 +77,7 @@ const pendingEarning = (req, res, next) => {
             $match: {
                 "_id.userId": { $eq: id },
                 "_id.isPaidOut": { $eq: false },
-
+                "_id.isCenceled": { $eq: false },
             }
         }
 

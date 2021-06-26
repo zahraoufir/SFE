@@ -36,24 +36,23 @@ app.use(function (req, res, next) {
   async function access(req, res, next) {
     var fullUrl =req.originalUrl;
 
-    if((fullUrl=="/api/register")||(fullUrl.includes("/api/clicks/"))||(fullUrl=="/api/login")||(fullUrl=="/api/forgot")||(fullUrl=="/api/verefication")||(fullUrl=="/api/reset/:token"))
+    if((fullUrl=="/api/earning/cencel")||(fullUrl=="/api/register")||(fullUrl=="/api/earning/create")||(fullUrl.includes("/verefication-profile"))||(fullUrl.includes("/api/clicks/create"))||(fullUrl.includes("withdrawls/create"))||(fullUrl=="/api/login")||(fullUrl=="/api/forgot")||(fullUrl=="/api/verefication")||(fullUrl=="/api/reset/:token"))
     {
-      console.log("wwwwwwwww");
        next();
     }else{
       console.log("jj"+fullUrl);
     const key='storeinosecret';
     const token = req.headers["x-auth-token"];
-    console.log("hhh"+token);
+   
     if(!token) return res.status(401).json({error:'Access denied '}); 
     try{
       const decoded = jwt.verify(token, key);
-      console.log("Eeee"+decoded.user.id);
+     
       const user = await User.findOne({id:decoded.user.id});
       if(user){
        
         req.user = decoded.user.id;
-        console.log("ooooo"+decoded.id);
+   
         next();
       }else{
        return res.json({error:'user not found '});
@@ -69,7 +68,7 @@ app.use('/api', users);
 app.use('/api/links',access, links);
 app.use('/api/earning',access, earning);
 app.use('/api/clicks',access, clicks);
-app.use('/api/withdrawls',access, withdrawls);
+app.use('/api/withdrawals',access, withdrawls);
 
 app.listen(4000, function () {
     console.log(" Server is listening at 3000");

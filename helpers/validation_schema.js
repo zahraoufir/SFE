@@ -8,14 +8,14 @@ const authSchema = Joi.object({
 })
 
 const profileSchema = Joi.object({
-    id : Joi.string().min(1).max(10),
+    id : Joi.number().integer(),
     email : Joi.string().email().lowercase().required(),
     first_name : Joi.string().min(3).max(20).required(),
     last_name : Joi.string().min(3).max(20).required(),
     address : Joi.string().min(3).max(100),
     country : Joi.string().min(3).max(100),
     city : Joi.string().min(3).max(100),
-    zip_code : Joi.string().min(3).max(10)
+    zip_code : Joi.number().integer(),
 })
 
 module.exports = {

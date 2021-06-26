@@ -6,10 +6,12 @@ const nodemailer = require("nodemailer");
 const JWT_SECRET='storeinosecret';
 var sess;
 const create = (req, res, next)=>{
+    if(req.body.redirect.includes("storeino")){
     const newlink = new Link({
         userId:req.user,
         route: req.body.route,
         redirect: req.body.redirect,
+        nbrClicks:0
     });
     newlink.save()
     .then(newlink => {
@@ -22,13 +24,19 @@ const create = (req, res, next)=>{
             message : error
         });
     });
+   }else{
+    res.json({
+        message : "the product should be of STOREINO"
+    });
+   }
 }
 const getAll = (req, res, next)=>{
     const token ='';
-    const userId=req.user;
+    const userId=parseInt(req.user) ;
       Link.find({userId:userId}).exec((err, result) =>{
         if (err) throw err;
         if(result){
+            console.log(result);
         res.json({
            massage:"succesful",
             result
